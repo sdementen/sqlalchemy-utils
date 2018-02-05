@@ -96,6 +96,36 @@ class TestGenericRelationship(object):
 
         assert event.object == manager
 
+    def test_set_and_get_and_set_and_get(self, session, Manager, Event):
+        manager = Manager()
+
+        session.add(manager)
+        session.commit()
+
+        event = Event(object=manager)
+
+        assert event.object_id == manager.id
+        assert event.object_type == type(manager).__name__
+
+        session.add(event)
+        session.commit()
+
+        assert event.object == manager
+
+        manager2 = Manager()
+
+        session.add(manager2)
+        session.commit()
+
+        event.object = manager2
+
+        assert event.object_id == manager2.id
+        assert event.object_type == type(manager2).__name__
+
+        session.commit()
+
+        assert event.object == manager2
+
     def test_compare_instance(self, session, Manager, Event):
         manager1 = Manager()
         manager2 = Manager()
